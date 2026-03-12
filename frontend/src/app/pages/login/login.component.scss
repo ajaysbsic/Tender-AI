@@ -1,0 +1,139 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+  }
+}
+
+.login-card,
+.info-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.login-card {
+  @media (max-width: 768px) {
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+.info-card {
+  display: none;
+
+  @media (min-width: 769px) {
+    display: flex;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    mat-card-header {
+      margin-bottom: 20px;
+    }
+
+    mat-card-title {
+      color: white;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        padding: 8px 0;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+mat-card-header {
+  margin-bottom: 30px;
+  text-align: center;
+
+  mat-card-title {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  mat-card-subtitle {
+    font-size: 14px;
+    color: #999;
+  }
+}
+
+mat-card-content {
+  flex: 1;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.login-button {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 20px;
+
+  .spinner {
+    margin-right: 8px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.toggle-mode {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+  color: #666;
+
+  button {
+    padding: 0;
+    height: auto;
+    line-height: 1;
+  }
+}
+
+mat-form-field {
+  ::ng-deep .mat-form-field-appearance-outline {
+    .mat-form-field-flex > *:first-child {
+      padding-right: 8px;
+    }
+  }
+}

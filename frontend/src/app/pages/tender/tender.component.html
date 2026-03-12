@@ -1,0 +1,183 @@
+<div class="tender-container">
+  <mat-card class="upload-card">
+    <mat-card-header>
+      <mat-card-title>Upload Tender Document</mat-card-title>
+      <mat-card-subtitle>
+        Drag and drop or select a PDF, Word document, or text file to analyze
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Idle State -->
+      <div
+        *ngIf="!isUploading && !processingStatus"
+        class="drop-zone"
+        [class.dragover]="dragover"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave()"
+        (drop)="onDrop($event)"
+      >
+        <input
+          #fileInput
+          type="file"
+          hidden
+          accept=".pdf,.doc,.docx,.txt"
+          (change)="onFileSelected($event)"
+        />
+
+        <div *ngIf="!selectedFile" class="drop-content">
+          <mat-icon class="upload-icon">cloud_upload</mat-icon>
+          <p class="main-text">Drag and drop your file here</p>
+          <p class="sub-text">or</p>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="browseFiles()"
+            type="button"
+          >
+            Browse Files
+          </button>
+          <p class="info-text">
+            Supported formats: PDF, DOCX, DOC, TXT (Max 500MB)
+          </p>
+        </div>
+
+        <div *ngIf="selectedFile" class="file-selected">
+          <mat-icon class="file-icon success">check_circle</mat-icon>
+          <p class="file-name">{{ selectedFile.name }}</p>
+          <p class="file-size">{{ fileSize }}</p>
+          <button
+            mat-button
+            color="accent"
+            (click)="clearFile()"
+            type="button"
+            [disabled]="isUploading"
+          >
+            Change File
+          </button>
+        </div>
+      </div>
+
+      <!-- Uploading State -->
+      <div *ngIf="isUploading && uploadProgress < 100" class="upload-state">
+        <div class="state-header">
+          <mat-icon class="state-icon">upload</mat-icon>
+          <p class="state-title">Uploading Document</p>
+        </div>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="uploadProgress"
+          color="primary"
+          class="progress-bar"
+        ></mat-progress-bar>
+        <p class="state-message">{{ uploadProgress }}% uploaded</p>
+      </div>
+
+      <!-- Processing State -->
+      <div *ngIf="processingStatus && processingStatus.status === 'processing'" class="upload-state processing">
+        <div class="state-header">
+          <mat-spinner diameter="24" class="state-icon"></mat-spinner>
+          <p class="state-title">Analyzing Document</p>
+        </div>
+        <mat-progress-bar
+          mode="indeterminate"
+          color="accent"
+        ></mat-progress-bar>
+        <p class="state-message">{{ processingStatus.message || 'Processing your tender...' }}</p>
+        <p class="state-hint">This may take a few minutes</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="processingStatus && processingStatus.status === 'error'" class="upload-state error">
+        <div class="state-header">
+          <mat-icon class="state-icon error-icon">error</mat-icon>
+          <p class="state-title">Processing Failed</p>
+        </div>
+        <p class="state-message">{{ processingStatus.error_message }}</p>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="clearFile(); processingStatus = null"
+        >
+          Try Again
+        </button>
+      </div>
+
+      <!-- Form Section (only show when not uploading) -->
+      <mat-form-field
+        *ngIf="!isUploading && !processingStatus"
+        appearance="outline"
+        class="full-width"
+      >
+        <mat-label>Company Description (Optional)</mat-label>
+        <textarea
+          matInput
+          [(ngModel)]="companyDescription"
+          placeholder="Provide context about your company to improve analysis. What are your core competencies? Any specific expertise relevant to this tender?"
+          rows="4"
+        ></textarea>
+        <mat-hint align="end">
+          {{ companyDescription.length }} / 1000 characters
+        </mat-hint>
+      </mat-form-field>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons" *ngIf="!isUploading && !processingStatus">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onSubmit()"
+          [disabled]="!selectedFile"
+        >
+          <mat-icon>upload</mat-icon>
+          Analyze Tender
+        </button>
+        <button
+          mat-button
+          (click)="goToDashboard()"
+        >
+          Back to Dashboard
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-card-title>How It Works</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="step-item">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <p class="step-title">Upload Document</p>
+          <p>Upload your RFP or tender document</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <p class="step-title">AI Analysis</p>
+          <p>Our AI analyzes eligibility, risks, and effort</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <p class="step-title">Get Insights</p>
+          <p>View detailed evaluation and bid recommendation</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <p class="step-title">Download Report</p>
+          <p>Export professional PDF report for your team</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

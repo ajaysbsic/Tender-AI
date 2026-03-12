@@ -1,0 +1,181 @@
+<div class="profile-container">
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <div class="header-content">
+        <mat-card-title>Company Profile</mat-card-title>
+        <mat-card-subtitle>{{ userEmail }}</mat-card-subtitle>
+      </div>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        class="menu-button"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="reset()" [disabled]="isLoading">
+          <mat-icon>refresh</mat-icon>
+          <span>Reload</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+        <div class="form-grid">
+          <!-- Company Name -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Company Name</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="companyName"
+              placeholder="Your Company Inc."
+            />
+            <mat-icon matPrefix>business</mat-icon>
+            <mat-error *ngIf="companyNameError">{{ companyNameError }}</mat-error>
+          </mat-form-field>
+
+          <!-- Industry -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Industry</mat-label>
+            <mat-select formControlName="industry">
+              <mat-option value="technology">Technology</mat-option>
+              <mat-option value="finance">Finance</mat-option>
+              <mat-option value="healthcare">Healthcare</mat-option>
+              <mat-option value="manufacturing">Manufacturing</mat-option>
+              <mat-option value="consulting">Consulting</mat-option>
+              <mat-option value="government">Government</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>category</mat-icon>
+          </mat-form-field>
+
+          <!-- Company Size -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Company Size</mat-label>
+            <mat-select formControlName="companySize">
+              <mat-option value="startup">Startup (1-10)</mat-option>
+              <mat-option value="small">Small (11-50)</mat-option>
+              <mat-option value="medium">Medium (51-250)</mat-option>
+              <mat-option value="large">Large (250+)</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>people</mat-icon>
+          </mat-form-field>
+
+          <!-- Contact Person -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Contact Person</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="contactPerson"
+              placeholder="John Doe"
+            />
+            <mat-icon matPrefix>person</mat-icon>
+          </mat-form-field>
+
+          <!-- Phone -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Phone Number</mat-label>
+            <input
+              matInput
+              type="tel"
+              formControlName="phone"
+              placeholder="+1 (555) 123-4567"
+            />
+            <mat-icon matPrefix>phone</mat-icon>
+            <mat-error *ngIf="phoneError">{{ phoneError }}</mat-error>
+          </mat-form-field>
+
+          <!-- Website -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Website</mat-label>
+            <input
+              matInput
+              type="url"
+              formControlName="website"
+              placeholder="https://www.company.com"
+            />
+            <mat-icon matPrefix>link</mat-icon>
+            <mat-error *ngIf="websiteError">{{ websiteError }}</mat-error>
+          </mat-form-field>
+
+          <!-- Expertise -->
+          <mat-form-field appearance="outline" class="full-width span-2">
+            <mat-label>Core Expertise & Competencies</mat-label>
+            <textarea
+              matInput
+              formControlName="expertise"
+              placeholder="Describe your company's core competencies and areas of expertise..."
+              rows="6"
+            ></textarea>
+            <mat-hint align="end">
+              {{ profileForm.get('expertise')?.value?.length || 0 }} / 1000 characters
+            </mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="profileForm.invalid || isSaving"
+          >
+            <mat-icon *ngIf="!isSaving">save</mat-icon>
+            <mat-spinner
+              *ngIf="isSaving"
+              diameter="20"
+              class="spinner"
+            ></mat-spinner>
+            {{ isSaving ? 'Saving...' : 'Save Changes' }}
+          </button>
+          <button
+            mat-button
+            type="button"
+            (click)="reset()"
+            [disabled]="isSaving || !profileForm.dirty"
+          >
+            Discard Changes
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Info Cards -->
+  <div class="info-cards">
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>Profile Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul>
+          <li>✓ Keep your company profile updated</li>
+          <li>✓ This helps provide more accurate evaluations</li>
+          <li>✓ Profile data improves AI recommendations</li>
+          <li>✓ All information is securely stored</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-card-title>Account Settings</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p><strong>Email:</strong> {{ userEmail }}</p>
+        <p class="hint">Contact support to change email or password</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

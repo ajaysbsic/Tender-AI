@@ -1,0 +1,161 @@
+<div class="evaluations-container">
+  <div class="evaluations-header">
+    <button mat-button (click)="backToDashboard()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Dashboard
+    </button>
+    <h1>Tender Evaluation</h1>
+  </div>
+
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+  <div *ngIf="!isLoading && evaluation" class="evaluation-content">
+    <!-- Main Recommendation Card -->
+    <mat-card class="recommendation-card">
+      <mat-card-content>
+        <div class="recommendation-header">
+          <mat-icon [color]="getRecommendationColor()">{{ getRecommendationIcon() }}</mat-icon>
+          <div>
+            <p class="recommendation-label">Bid Recommendation</p>
+            <p class="recommendation-value">
+              {{ formatRecommendation(evaluation.bid_recommendation) }}
+            </p>
+          </div>
+          <div class="score-display" [ngClass]="getScoreBgClass(evaluation.overall_score)">
+            <div class="score-number">{{ evaluation.overall_score | number: '1.0-0' }}</div>
+            <div class="score-label">Overall Score</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Scores Grid -->
+    <div class="scores-grid">
+      <mat-card class="score-card">
+        <mat-card-content>
+          <div class="score-icon">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <p class="score-label">Eligibility</p>
+          <p class="score-value">{{ evaluation.scores.eligibility.score | number: '1.0-0' }}%</p>
+          <p class="score-category">{{ evaluation.scores.eligibility.category }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="score-card">
+        <mat-card-content>
+          <div class="score-icon">
+            <mat-icon>warning</mat-icon>
+          </div>
+          <p class="score-label">Risk Assessment</p>
+          <p class="score-value">{{ evaluation.scores.risk.score | number: '1.0-0' }}%</p>
+          <p class="score-category">{{ evaluation.scores.risk.category }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="score-card">
+        <mat-card-content>
+          <div class="score-icon">
+            <mat-icon>speed</mat-icon>
+          </div>
+          <p class="score-label">Effort Estimation</p>
+          <p class="score-value">{{ evaluation.scores.effort.score | number: '1.0-0' }}%</p>
+          <p class="score-category">{{ evaluation.scores.effort.category }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Tabs for details -->
+    <mat-tab-group [(selectedIndex)]="selectedTab">
+      <!-- Overview Tab -->
+      <mat-tab label="Overview">
+        <div class="tab-content">
+          <div class="details-section">
+            <h3>Strengths</h3>
+            <mat-list>
+              <mat-list-item *ngFor="let strength of evaluation.strengths">
+                <mat-icon matListItemIcon color="accent">check</mat-icon>
+                <div matListItemTitle>{{ strength }}</div>
+              </mat-list-item>
+            </mat-list>
+          </div>
+
+          <div class="details-section">
+            <h3>Weaknesses</h3>
+            <mat-list>
+              <mat-list-item *ngFor="let weakness of evaluation.weaknesses">
+                <mat-icon matListItemIcon color="warn">close</mat-icon>
+                <div matListItemTitle>{{ weakness }}</div>
+              </mat-list-item>
+            </mat-list>
+          </div>
+
+          <div class="details-section">
+            <h3>Critical Items</h3>
+            <mat-list>
+              <mat-list-item *ngFor="let item of evaluation.critical_items">
+                <mat-icon matListItemIcon>priority_high</mat-icon>
+                <div matListItemTitle>{{ item }}</div>
+              </mat-list-item>
+            </mat-list>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Eligibility Details Tab -->
+      <mat-tab label="Eligibility Details">
+        <div class="tab-content">
+          <div *ngIf="eligibilityDetails" class="eligibility-section">
+            <div class="eligibility-header">
+              <h3>{{ eligibilityDetails.category }}</h3>
+              <span class="completion-badge">
+                {{ eligibilityDetails.requirements_met }} / {{ eligibilityDetails.total_requirements }}
+              </span>
+            </div>
+
+            <div class="requirements-list">
+              <mat-list>
+                <mat-list-item
+                  *ngFor="let req of eligibilityDetails.requirements"
+                  class="requirement-item"
+                >
+                  <mat-icon matListItemIcon [color]="req.met ? 'accent' : 'warn'">
+                    {{ req.met ? 'check_circle' : 'cancel' }}
+                  </mat-icon>
+                  <div matListItemTitle class="requirement-text">
+                    {{ req.text }}
+                  </div>
+                  <div matListItemLine class="requirement-details">
+                    <span *ngIf="req.mandatory" class="badge mandatory">Mandatory</span>
+                    <span class="reasoning">{{ req.reasoning }}</span>
+                  </div>
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="downloadPdf()"
+        [disabled]="isDownloadingPdf"
+      >
+        <mat-icon>download</mat-icon>
+        {{ isDownloadingPdf ? 'Downloading...' : 'Download Report' }}
+      </button>
+      <button mat-button (click)="backToDashboard()">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !evaluation" class="empty-state">
+    <mat-icon>error_outline</mat-icon>
+    <p>Evaluation not found</p>
+  </div>
+</div>

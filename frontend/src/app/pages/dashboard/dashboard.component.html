@@ -1,0 +1,122 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div>
+      <h1>Welcome to TenderIQ</h1>
+      <p class="subtitle">{{ userEmail }}</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="navigateToUpload()">
+      <mat-icon>upload_file</mat-icon>
+      Upload New Tender
+    </button>
+  </div>
+
+  <mat-card-content class="stats-grid" *ngIf="!isLoading">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-value">{{ totalTenders }}</div>
+        <div class="stat-label">Total Tenders</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card accent">
+      <mat-card-content>
+        <div class="stat-value">{{ recommendedBids }}</div>
+        <div class="stat-label">Recommended Bids</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card warning">
+      <mat-card-content>
+        <div class="stat-value">{{ highRiskItems }}</div>
+        <div class="stat-label">High Risk Items</div>
+      </mat-card-content>
+    </mat-card>
+  </mat-card-content>
+
+  <div class="recent-section">
+    <h2>Recent Evaluations</h2>
+
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+    <div *ngIf="!isLoading && recentEvaluations.length === 0" class="empty-state">
+      <mat-icon>folder_open</mat-icon>
+      <p>No tenders evaluated yet</p>
+      <p class="hint">Upload a tender document to get started</p>
+    </div>
+
+    <mat-list *ngIf="!isLoading && recentEvaluations.length > 0">
+      <mat-list-item *ngFor="let eval of recentEvaluations" class="evaluation-item">
+        <mat-icon matListItemIcon>description</mat-icon>
+
+        <div matListItemTitle class="eval-title">
+          Tender #{{ eval.tender_id | slice: 0: 8 }}
+        </div>
+
+        <div matListItemLine class="eval-details">
+          <span class="badge" [ngClass]="getScoreBadgeColor(eval.overall_score)">
+            Score: {{ eval.overall_score | number: '1.0-0' }}%
+          </span>
+          <span class="badge recommendation" [ngClass]="getRecommendationColor(eval.bid_recommendation)">
+            {{ formatRecommendation(eval.bid_recommendation) }}
+          </span>
+        </div>
+
+        <div matListItemLine class="eval-scores">
+          <span>
+            <mat-icon class="small-icon">check_circle</mat-icon>
+            Eligibility: {{ eval.scores.eligibility.score | number: '1.0-0' }}%
+          </span>
+          <span>
+            <mat-icon class="small-icon">warning</mat-icon>
+            Risk: {{ eval.scores.risk.score | number: '1.0-0' }}%
+          </span>
+          <span>
+            <mat-icon class="small-icon">speed</mat-icon>
+            Effort: {{ eval.scores.effort.score | number: '1.0-0' }}%
+          </span>
+        </div>
+
+        <button
+          mat-icon-button
+          matListItemMeta
+          (click)="viewEvaluation(eval.tender_id)"
+          matTooltip="View Details"
+        >
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </mat-list-item>
+      <mat-divider *ngFor="let item of recentEvaluations.slice(0, -1)"></mat-divider>
+    </mat-list>
+  </div>
+
+  <!-- Processing Tenders Section -->
+  <div class="processing-section" *ngIf="processingTenders.size > 0">
+    <h2>Currently Processing</h2>
+    
+    <mat-list>
+      <mat-list-item *ngFor="let tender of processingTenders | keyvalue" class="processing-item">
+        <mat-icon matListItemIcon>hourglass_top</mat-icon>
+        
+        <div matListItemTitle class="processing-title">
+          Tender #{{ tender.value.tender_id | slice: 0: 8 }}
+        </div>
+
+        <div matListItemLine class="processing-details">
+          <mat-spinner diameter="16" class="inline-spinner"></mat-spinner>
+          <span class="processing-message">
+            {{ tender.value.message || 'Analyzing document...' }}
+          </span>
+        </div>
+
+        <div matListItemLine class="processing-progress" *ngIf="tender.value.progress_percentage">
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="tender.value.progress_percentage"
+            class="inline-progress"
+          ></mat-progress-bar>
+          <span class="progress-text">{{ tender.value.progress_percentage }}%</span>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>

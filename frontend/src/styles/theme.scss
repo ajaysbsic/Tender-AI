@@ -1,0 +1,27 @@
+// Tender-AI Theme
+// Material Design theme configuration
+
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+// Custom theme variables
+$primary-color: #1976d2;
+$accent-color: #ff4081;
+$warn-color: #f44336;
+
+// Global styles
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+// RTL Support
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}

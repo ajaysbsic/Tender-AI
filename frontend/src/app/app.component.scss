@@ -1,0 +1,95 @@
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  height: 64px;
+
+  .app-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 16px;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .language-section {
+    display: flex;
+    align-items: center;
+    margin: 0 8px;
+
+    .lang-label {
+      margin-left: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+
+  .user-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 16px;
+
+    .user-email {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+/* RTL Support */
+[dir='rtl'] {
+  .app-toolbar {
+    .user-section {
+      margin-right: auto;
+      margin-left: 16px;
+    }
+
+    .language-section {
+      margin-left: 8px;
+      margin-right: auto;
+
+      .lang-label {
+        margin-left: 0;
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+.app-container {
+  height: calc(100vh - 64px);
+}
+
+.app-sidenav {
+  width: 250px;
+  background-color: #fafafa;
+
+  .nav-item {
+    cursor: pointer;
+    margin: 8px 0;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    mat-icon {
+      color: rgba(0, 0, 0, 0.54);
+    }
+  }
+}
+
+.app-content {
+  padding: 24px;
+  overflow-y: auto;
+}
