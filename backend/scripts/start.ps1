@@ -1,7 +1,10 @@
 # TenderIQ Backend Startup Script
 
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$backendRoot = Resolve-Path (Join-Path $scriptDir "..")
+
 # Activate virtual environment
-$venvPath = "d:\AI Projects\Tender-AI\backend\.venv\Scripts\Activate.ps1"
+$venvPath = Join-Path $backendRoot ".venv\Scripts\Activate.ps1"
 if (Test-Path $venvPath) {
     Write-Host "Activating virtual environment..." -ForegroundColor Green
     & $venvPath
@@ -10,6 +13,8 @@ if (Test-Path $venvPath) {
     exit 1
 }
 
-# Start FastAPI server
+# Start FastAPI server from backend root
 Write-Host "Starting TenderIQ API server..." -ForegroundColor Green
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+Push-Location $backendRoot
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
+Pop-Location

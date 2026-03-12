@@ -3,6 +3,12 @@ Add test user to database
 Email: ajay.kumar@alfanar.com
 Password: Ajay123#
 """
+import sys
+from pathlib import Path
+
+# Ensure backend root is importable when running from scripts/
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from app.core.database import SessionLocal
 from app.models.tables import User
 import bcrypt

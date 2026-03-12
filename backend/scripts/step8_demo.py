@@ -5,8 +5,14 @@ Demonstrates all scoring features with synthetic tender data.
 Run: python step8_demo.py
 """
 
+import sys
+from pathlib import Path
 import json
 from datetime import datetime
+
+# Ensure backend root is importable when running from scripts/
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from app.services.scoring_engine import TenderScoringEngine
 from app.services.scoring_models import ScoringConfig
 from app.services.ai_schemas import (

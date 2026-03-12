@@ -9,6 +9,10 @@ import json
 import sys
 from datetime import datetime
 from pprint import pprint
+from pathlib import Path
+
+# Ensure backend root is importable when running from scripts/
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.services.ai_schemas import (
     ClauseExtractionOutput,
