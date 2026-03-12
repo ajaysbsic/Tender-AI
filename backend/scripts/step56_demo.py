@@ -13,8 +13,8 @@ import os
 import sys
 from pathlib import Path
 
-# Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent / "backend"))
+# Add backend root to path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.services.section_detector import SectionDetector, SectionType
 from app.services.chunker import TextChunker, ChunkingStrategy

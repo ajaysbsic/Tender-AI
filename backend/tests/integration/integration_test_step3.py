@@ -11,7 +11,7 @@ import time
 import sys
 
 # Configuration
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = os.getenv("TENDER_API_URL", "http://localhost:8001")
 TEST_EMAIL = f"integration_test_{int(time.time())}@example.com"
 TEST_PASSWORD = "TestPassword123!"
 

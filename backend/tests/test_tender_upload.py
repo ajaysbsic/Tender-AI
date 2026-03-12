@@ -5,9 +5,15 @@ Test tender upload and async processing pipeline
 import pytest
 import os
 import tempfile
+import sys
+from pathlib import Path
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+# Ensure backend package imports work regardless of working directory
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from app.main import app
 from app.core.database import Base, get_db
 from app.models.tables import User, CompanyProfile, Tender
