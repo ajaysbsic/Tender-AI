@@ -1,12 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, interval, BehaviorSubject, of } from 'rxjs';
-import { takeUntil, switchMap, tap, catchError, debounceTime } from 'rxjs/operators';
+import { takeUntil, switchMap, tap, catchError, debounceTime, map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 
 export interface TenderStatus {
   tender_id: string;
-  status: 'pending' | 'processing' | 'completed' | 'error';
+  status: 'pending' | 'uploaded' | 'processing' | 'completed' | 'failed' | 'error';
   progress_percentage?: number;
   message?: string;
   evaluation_id?: string;
@@ -71,8 +71,8 @@ export class StatusPollingService implements OnDestroy {
         this.tenderStatus$.next(status);
         this.pollingResults$.next(status);
 
-        // Stop polling if completed or error
-        if (status.status === 'completed' || status.status === 'error') {
+        // Stop polling when server reaches terminal state
+        if (status.status === 'completed' || status.status === 'error' || status.status === 'failed') {
           this.stopPolling(tenderId);
         }
       }),
@@ -120,6 +120,26 @@ export class StatusPollingService implements OnDestroy {
   getTenderStatus(tenderId: string): Observable<TenderStatus> {
     return this.http.get<TenderStatus>(
       `${this.apiUrl}/tender/${tenderId}/status`
+    ).pipe(
+      map((status) => {
+        if (status.status === 'failed') {
+          return {
+            ...status,
+            status: 'error',
+            error_message: status.error_message || 'Processing failed on server'
+          } as TenderStatus;
+        }
+
+        if (status.status === 'uploaded') {
+          return {
+            ...status,
+            status: 'processing',
+            message: status.message || 'Queued for processing...'
+          } as TenderStatus;
+        }
+
+        return status;
+      })
     );
   }
 
